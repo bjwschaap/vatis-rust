@@ -152,6 +152,7 @@ fn get_mac() -> String {
 
 // Sends a metric value to mqtt
 fn send(cli: &mqtt::Client, mac: &String, metric: String, ts: u128, mvalue: String) {
+
     let msg = mqtt::MessageBuilder::new()
         .topic(format!("metrics/{}/{}", mac, metric))
         .payload(format!("{};{}", ts, mvalue))
@@ -166,12 +167,11 @@ fn send(cli: &mqtt::Client, mac: &String, metric: String, ts: u128, mvalue: Stri
 
 // Takes all memory statistics, and sends them to mqtt
 async fn send_mem_stats(cli: &mqtt::Client, mac: &String) {
+
     // Get system time in Unix Nano
     let now = SystemTime::now().duration_since(SystemTime::UNIX_EPOCH).unwrap().as_nanos();
 
-    // let stat = linux_stats::stat().unwrap();
     let mem_info = linux_stats::meminfo().unwrap();
-    // let tcp_stat = linux_stats::tcp().unwrap();
 
     send(cli, mac, String::from("memory/total"), now, format!("{}", mem_info.mem_total));
     send(cli, mac, String::from("memory/free"), now, format!("{}", mem_info.mem_free));
@@ -220,6 +220,7 @@ async fn send_mem_stats(cli: &mqtt::Client, mac: &String) {
 
 // Takes all memory statistics, and sends them to mqtt
 async fn send_tcp_stats(cli: &mqtt::Client, mac: &String) {
+
     // Get system time in Unix Nano
     let now = SystemTime::now().duration_since(SystemTime::UNIX_EPOCH).unwrap().as_nanos();
 
