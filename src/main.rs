@@ -14,7 +14,6 @@ use linux_stats;
 use tokio::time::{self, Duration};
 use tokio::signal::unix::{signal, SignalKind};
 use mqtt::Client;
-use futures::join;
 
 
 #[cfg(target_os="linux")]
@@ -88,7 +87,7 @@ async fn send_stats(cli: &mqtt::Client, mac: &String) {
 
 
     // Wait until everything is sent..
-    join!(mem_future, tcp_future);
+    tokio::join!(mem_future, tcp_future);
     debug!("stats published");
 }
 
